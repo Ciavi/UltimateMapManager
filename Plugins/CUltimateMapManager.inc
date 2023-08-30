@@ -452,7 +452,7 @@ namespace PRoConEvents {
         }
 
         public string GetPluginVersion() {
-            return "1.2.6.1";
+            return "1.2.6.2";
         }
 
         public string GetPluginAuthor() {
@@ -1701,9 +1701,9 @@ namespace PRoConEvents {
                 }
                 mapListIndices.Add("all");
 
-                this.RegisterCommand(new MatchCommand("CUltimateMapManager","OnCommandMapList", this.Listify<string>("@", "!", "#"), "maplist", this.Listify<MatchArgumentFormat>(new MatchArgumentFormat("map list index", mapListIndices), new MatchArgumentFormat("on/off", new List<string>(new string[] {"on", "off"}))), new ExecutionRequirements(ExecutionScope.Privileges,Privileges.CanUseMapFunctions,"You do not have enough privileges to change the map list"),"Enables or disables the specified map list"));
-                this.RegisterCommand(new MatchCommand("CUltimateMapManager","OnCommandMapListShow", this.Listify<string>("@", "!", "#"), "maplist", this.Listify<MatchArgumentFormat>(new MatchArgumentFormat("map list index", mapListIndices)), new ExecutionRequirements(ExecutionScope.Privileges,Privileges.CanUseMapFunctions,"You do not have enough privileges to change the map list"),"Displays the status of the specified map list"));
-                this.RegisterCommand(new MatchCommand("CUltimateMapManager","OnCommandMapListShowCurrent", this.Listify<string>("@", "!", "#"), "maplist", this.Listify<MatchArgumentFormat>(), new ExecutionRequirements(ExecutionScope.Privileges,Privileges.CanUseMapFunctions,"You do not have enough privileges to change the map list"),"Displays the status of all map lists"));
+                this.RegisterCommand(new MatchCommand("CUltimateMapManager","OnCommandMapList", this.Listify<string>("@", "!", "#", "/"), "maplist", this.Listify<MatchArgumentFormat>(new MatchArgumentFormat("map list index", mapListIndices), new MatchArgumentFormat("on/off", new List<string>(new string[] {"on", "off"}))), new ExecutionRequirements(ExecutionScope.Privileges,Privileges.CanUseMapFunctions,"You do not have enough privileges to change the map list"),"Enables or disables the specified map list"));
+                this.RegisterCommand(new MatchCommand("CUltimateMapManager","OnCommandMapListShow", this.Listify<string>("@", "!", "#", "/"), "maplist", this.Listify<MatchArgumentFormat>(new MatchArgumentFormat("map list index", mapListIndices)), new ExecutionRequirements(ExecutionScope.Privileges,Privileges.CanUseMapFunctions,"You do not have enough privileges to change the map list"),"Displays the status of the specified map list"));
+                this.RegisterCommand(new MatchCommand("CUltimateMapManager","OnCommandMapListShowCurrent", this.Listify<string>("@", "!", "#", "/"), "maplist", this.Listify<MatchArgumentFormat>(), new ExecutionRequirements(ExecutionScope.Privileges,Privileges.CanUseMapFunctions,"You do not have enough privileges to change the map list"),"Displays the status of all map lists"));
             }
         }
 
@@ -1942,6 +1942,18 @@ namespace PRoConEvents {
                         this.ExecuteCommand("procon.protected.plugins.setVariable", "CUltimateMapManager", "["+this.m_LMaplists[iMaplist].Index+"] Enable this map list?", "CONFIG:No");
                         this.ExecuteCommand("procon.protected.send", "admin.say", "Map List "+this.m_LMaplists[iMaplist].Index+" ("+this.m_LMaplists[iMaplist].Name+") has been DISABLED.", "player", strSpeaker);
                     }
+                }
+            }
+        }
+
+        public void CommandMapList(string caller, string mapList, string status) {
+            WritePluginConsole($"CALL -> {caller} called CommandMapList {mapList} {status}");
+            int iMaplist = 0;
+            if (int.TryParse(mapList, out iMaplist) == true) {
+                if (status == "on") {
+                    this.ExecuteCommand("procon.protected.plugins.setVariable", "CUltimateMapManager", "["+this.m_LMaplists[iMaplist].Index+"] Enable this map list?", "CONFIG:Yes");
+                } else if (status == "off") {
+                    this.ExecuteCommand("procon.protected.plugins.setVariable", "CUltimateMapManager", "["+this.m_LMaplists[iMaplist].Index+"] Enable this map list?", "CONFIG:No");
                 }
             }
         }
