@@ -456,7 +456,7 @@ namespace PRoConEvents {
         }
 
         public string GetPluginAuthor() {
-            return "falcontx, Hedius";
+            return "falcontx, Hedius, Ciavi";
         }
 
         public string GetPluginWebsite() {
